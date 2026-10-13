@@ -1,23 +1,22 @@
-const CACHE_NAME = 'jd-workout-tracker-v1';
+const CACHE_NAME = 'jd-workout-tracker-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js'
+  './logo.png'
 ];
 
-// Install Event - Assets ko cache me save karna
+// Install Event
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('Caching assets');
+      console.log('Caching assets for offline use');
       return cache.addAll(ASSETS);
-    })
+    }).catch(err => console.log('Cache error:', err))
   );
 });
 
-// Activate Event - Purane cache ko delete karna
+// Activate Event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -32,7 +31,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event - Offline support ke liye
+// Fetch Event
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
